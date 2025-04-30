@@ -52,7 +52,7 @@ def submit_code():
     if not code:
         return render_template('Code.html', error="Code is required.", previous_code="")
     
-    # Получаем IP-адрес客户端а
+    # Получаем IP-адрес клиента
     client_ip = request.remote_addr
     
     # Ищем номер телефона по IP
